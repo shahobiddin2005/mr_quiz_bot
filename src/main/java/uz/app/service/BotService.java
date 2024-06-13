@@ -20,8 +20,10 @@ public class BotService extends TelegramLongPollingBot {
     @Override
     public void onUpdateReceived(Update update) {
         if (update.hasCallbackQuery()) {
+            System.out.println(update.getCallbackQuery().getData());
             logicService.callbackHandler(update);
         } else if (update.hasMessage()) {
+            System.out.println(update.getMessage().getText());
             logicService.messageHandler(update);
         }
     }

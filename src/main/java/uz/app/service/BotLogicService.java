@@ -1,6 +1,7 @@
 package uz.app.service;
 
 import lombok.SneakyThrows;
+import org.apache.commons.lang3.text.StrBuilder;
 import org.telegram.telegrambots.meta.api.methods.send.SendMessage;
 import org.telegram.telegrambots.meta.api.methods.send.SendPhoto;
 import org.telegram.telegrambots.meta.api.methods.updatingmessages.DeleteMessage;
@@ -60,8 +61,30 @@ public class BotLogicService {
 
         String text = update.getMessage().getText();
 
+        if (isTestDelete && id.equals(adminId)){
+            switch (currentUser.getState()){
+                case "deleteQuestion" -> {
+                    try {
+                        int num = Integer.parseInt(text)-1;
+                        if (num >= 0 && num < db.tests.size()){
+                            db.tests.remove(num);
+                            sendMessage.setText("Test deleted succesfully ✅");
+                            sendMessage.setReplyMarkup(replyService.keyboardMaker(adminMenu));
+                            botService.executeMessages(sendMessage);
+                            isTestDelete = false;
+                            return;
+                        }
+                    }catch (Exception e){
+                        sendMessage.setText("This is not number❗\uFE0F \nPlease enter integer:");
+                        botService.executeMessages(sendMessage);
+                        return;
+                    }
+                }
+            }
+        }
         if (isTestAdd && id.equals(adminId)) {
             switch (currentUser.getState()) {
+
                 case "question" -> {
                     test.setQuestion(text);
                     sendMessage.setText("Question added ✅\nAdd variants:");
@@ -176,10 +199,12 @@ public class BotLogicService {
             } case DELETE_TEST -> {
                 if (!id.equals(adminId)) return;
                 isTestDelete = true;
-                currentUser.setState("question");
-                test = new Test();
-                variantCount = 3;
-                sendMessage.setText("Enter your question:");
+                currentUser.setState("deleteQuestion");
+                StrBuilder s = new StrBuilder();
+                for (int i = 0; i < db.tests.size(); i++) {
+                    s.append(i+1 + " -> " + db.tests.get(i).getQuestion()+"\n");
+                }
+                sendMessage.setText(s.toString()+"\nEnter question number:");
                 ReplyKeyboardRemove replyKeyboardRemove = new ReplyKeyboardRemove();
                 replyKeyboardRemove.setRemoveKeyboard(true);
                 replyKeyboardRemove.setSelective(true);
@@ -274,7 +299,7 @@ public class BotLogicService {
                         ArrayList<Test> tests = new ArrayList<>();
                         LinkedHashSet<Integer> taskcount = new LinkedHashSet<>();
                         Random random = new Random();
-                        while (taskcount.size() < 4) {
+                        while (taskcount.size() < 10) {
                             taskcount.add(random.nextInt(db.tests.size()));
                         }
                         for (Integer i : taskcount) {
@@ -299,7 +324,7 @@ public class BotLogicService {
                         editMessageText.setText("Start \uD83C\uDFC1");
                         botService.executeMessages(editMessageText);
                         Thread.sleep(500);
-                        currentUser.setEndTime(LocalTime.now().plusMinutes(1));
+                        currentUser.setEndTime(LocalTime.now().plusMinutes(5));
                         testMaker(messageId, currentUser, currentUser.getCurrentTestNumber());
 
                     }
