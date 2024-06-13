@@ -9,8 +9,13 @@ import java.util.List;
 @Data
 @AllArgsConstructor
 @NoArgsConstructor
-public class Test {
+public class Test implements Cloneable {
     private String question;
     private List<Answer> answers;
-    private Boolean isCorrect = false;
+    private String selectedAns = null;
+
+    @Override
+    public Test clone() throws CloneNotSupportedException {
+        return (Test) super.clone();
+    }
 }

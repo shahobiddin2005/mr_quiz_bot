@@ -2,25 +2,18 @@ package uz.app.util;
 
 public interface Utils {
 
-    String START_TEST = "start test";
-    String INFO="info";
-    String CONTACT_US="contact us";
+    String ADD_TEST = "Add test ➕";
+    String DELETE_TEST="Delete test \uD83D\uDDD1";
+    String[][] adminMenu = {
+            {ADD_TEST, DELETE_TEST}
+    };
+    String START_TEST = "Start new test";
+    String SHOW_RESULT="Show rsult \uD83D\uDCCA";
     String[][] mainMenu = {
-            {INFO, START_TEST},
-            {CONTACT_US}
+            {SHOW_RESULT, START_TEST},
     };
 
-    String FILIALS = "filials";
-    String PRODUCTS = "products";
-    String MAIN_ASKED = "main asked";
-    String WORKING_DAYS = "working days";
-    String BACK = "back";
-    String WORKING_HOURS = "working hours";
-    String[][] info = {
-            {FILIALS, PRODUCTS, MAIN_ASKED},
-            {WORKING_DAYS, WORKING_HOURS},
-            {BACK}
-    };
+
 
 
 }

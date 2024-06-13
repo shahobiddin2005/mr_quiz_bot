@@ -9,5 +9,5 @@ import lombok.NoArgsConstructor;
 @NoArgsConstructor
 public class Answer {
     private String variant;
-    private Boolean hasCorrect;
+    private Boolean hasCorrect = false;
 }

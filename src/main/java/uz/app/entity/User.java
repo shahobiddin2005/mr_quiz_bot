@@ -4,6 +4,8 @@ import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 
+import java.time.LocalDate;
+import java.time.LocalTime;
 import java.util.List;
 import java.util.Objects;
 
@@ -13,7 +15,9 @@ import java.util.Objects;
 public class User {
     private String id;
     private String state;
+    private Integer currentTestNumber;
     private List<Test> currentTest;
+    private LocalTime endTime;
 
     @Override
     public boolean equals(Object object) {

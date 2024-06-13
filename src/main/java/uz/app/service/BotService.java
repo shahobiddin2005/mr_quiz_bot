@@ -1,10 +1,14 @@
 package uz.app.service;
 
+import lombok.NonNull;
 import lombok.SneakyThrows;
 import org.telegram.telegrambots.bots.TelegramLongPollingBot;
 import org.telegram.telegrambots.meta.api.methods.ForwardMessage;
 import org.telegram.telegrambots.meta.api.methods.send.SendMessage;
 import org.telegram.telegrambots.meta.api.methods.send.SendPhoto;
+import org.telegram.telegrambots.meta.api.methods.updatingmessages.DeleteMessage;
+import org.telegram.telegrambots.meta.api.methods.updatingmessages.EditMessageText;
+import org.telegram.telegrambots.meta.api.objects.Message;
 import org.telegram.telegrambots.meta.api.objects.Update;
 import org.telegram.telegrambots.meta.exceptions.TelegramApiException;
 
@@ -15,7 +19,6 @@ public class BotService extends TelegramLongPollingBot {
     @SneakyThrows
     @Override
     public void onUpdateReceived(Update update) {
-        System.out.println(update.getMessage().getChatId());
         if (update.hasCallbackQuery()) {
             logicService.callbackHandler(update);
         } else if (update.hasMessage()) {
@@ -63,5 +66,20 @@ public class BotService extends TelegramLongPollingBot {
     @SneakyThrows
     public void executeMessages(SendPhoto sendPhoto) {
         execute(sendPhoto);
+    }
+
+    @SneakyThrows
+    public void executeMessages(DeleteMessage deleteMessage) {
+        execute(deleteMessage);
+    }
+
+    @SneakyThrows
+    public Message executeMessages(SendMessage deleteMessage) {
+        return execute(deleteMessage);
+    }
+
+    @SneakyThrows
+    public void executeMessages(EditMessageText editMessageText) {
+        execute(editMessageText);
     }
 }
