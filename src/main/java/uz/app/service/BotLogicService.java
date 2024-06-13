@@ -26,11 +26,7 @@ import static uz.app.util.Utils.*;
 
 public class BotLogicService {
     private SendMessage sendMessage = new SendMessage();
-    Db db = new Db();
-
-    {
-        db.adds();
-    }
+    Db db = Db.getInstance();
 
     BotService botService = BotService.getInstance();
     private final ReplyMarkupService replyService = new ReplyMarkupService();
@@ -277,6 +273,8 @@ public class BotLogicService {
 
     @SneakyThrows
     public void callbackHandler(Update update) {
+        Long id = update.getCallbackQuery().getMessage().getChatId();
+        currentUser = getUserById(id);
         if (currentUser == null) {
             sendMessage.setChatId(update.getCallbackQuery().getMessage().getChatId());
             sendMessage.setText("Click /start for begin");
@@ -284,7 +282,6 @@ public class BotLogicService {
             botService.executeMessages(sendMessage);
             return;
         }
-        Long id = update.getCallbackQuery().getMessage().getChatId();
         if (id.equals(adminId)) {
             sendMessage.setReplyMarkup(null);
             sendMessage.setChatId(id);
@@ -299,7 +296,9 @@ public class BotLogicService {
                         ArrayList<Test> tests = new ArrayList<>();
                         LinkedHashSet<Integer> taskcount = new LinkedHashSet<>();
                         Random random = new Random();
-                        while (taskcount.size() < 10) {
+                        int n = db.tests.size();
+                        if (n >= 10)n = 10;
+                        while (taskcount.size() < n) {
                             taskcount.add(random.nextInt(db.tests.size()));
                         }
                         for (Integer i : taskcount) {
@@ -423,6 +422,8 @@ public class BotLogicService {
                     case "yes" -> {
                         DeleteMessage deleteMessage = new DeleteMessage();
                         deleteMessage.setChatId(currentUser.getId());
+                        currentUser.setEndTime(LocalTime.now());
+                        currentUser.setCurrentTestNumber(0);
                         deleteMessage.setMessageId(messageId);
                         botService.executeMessages(deleteMessage);
                         sendMessage.setText("Test complated ✅");

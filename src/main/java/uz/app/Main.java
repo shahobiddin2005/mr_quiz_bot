@@ -14,7 +14,6 @@ public class Main {
     static Scanner strScanner = new Scanner(System.in);
 
     public static void main(String[] args) throws TelegramApiException {
-        new Db().adds();
         TelegramBotsApi api =new TelegramBotsApi(DefaultBotSession.class);
         api.registerBot(BotService.getInstance());
     }

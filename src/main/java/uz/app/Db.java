@@ -2,6 +2,7 @@ package uz.app;
 
 import uz.app.entity.Answer;
 import uz.app.entity.Test;
+import uz.app.service.BotLogicService;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -9,7 +10,19 @@ import java.util.List;
 public class Db {
     public ArrayList<Test> tests = new ArrayList<>();
 
-    public void adds(){
+    public Db() {
+        adds();
+    }
+
+    private static Db botLogicService;
+
+    public static Db getInstance() {
+        if (botLogicService == null) {
+            botLogicService = new Db();
+        }
+        return botLogicService;
+    }
+    private void adds(){
         ArrayList<Answer> ans1 = new ArrayList<>();
         ans1.add(new Answer("Bu oddiy massiv", false));
         ans1.add(new Answer("Ma`lumotlarni saqlash uchun struktura", true));
